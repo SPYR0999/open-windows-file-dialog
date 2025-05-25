@@ -1,6 +1,6 @@
 # open-windows-file-dialog [![NPM version](https://img.shields.io/npm/v/open-windows-file-dialog.svg?style=flat)](https://www.npmjs.com/package/open-windows-file-dialog) [![NPM monthly downloads](https://img.shields.io/npm/dm/open-windows-file-dialog.svg?style=flat)](https://npmjs.org/package/open-windows-file-dialog) [![NPM total downloads](https://img.shields.io/npm/dt/open-windows-file-dialog.svg?style=flat)](https://npmjs.org/package/open-windows-file-dialog)
 
-> Programmatically open a file (explorer) dialog window for picking files. Only works on Windows. See open-finder-dialog, open-linux-file-dialog, and open-file-manager-dialog for other platforms.
+> Programmatically open a file dialog window (explorer) for picking files. Only works on Windows. Also see: open-finder-dialog, open-linux-file-dialog, and open-file-manager-dialog for other platforms.
 
 Please consider following this project's author, [Jon Schlinkert](https://github.com/jonschlinkert), and consider starring the project to show your :heart: and support.
 
@@ -211,6 +211,14 @@ try {
   }
 }
 ```
+
+## Related
+
+You might also be interested in:
+
+* [open-file-manager](https://www.npmjs.com/package/open-file-manager): Cross-platform utility to open a file or directory in the system's default file manager (Finder… [more](https://github.com/jonschlinkert/open-file-manager) | [homepage](https://github.com/jonschlinkert/open-file-manager "Cross-platform utility to open a file or directory in the system's default file manager (Finder, Explorer, Nautilus, etc.)")
+* [open-finder-dialog](https://www.npmjs.com/package/open-finder-dialog): Open a finder dialog window (finder prompt) programmatically. Only works on MacOS. | [homepage](https://github.com/jonschlinkert/open-finder-dialog "Open a finder dialog window (finder prompt) programmatically. Only works on MacOS.")
+* [open-linux-file-dialog](https://www.npmjs.com/package/open-linux-file-dialog): Open a file dialog window programmatically to allow the user to select one or more… [more](https://github.com/jonschlinkert/open-linux-file-dialog) | [homepage](https://github.com/jonschlinkert/open-linux-file-dialog "Open a file dialog window programmatically to allow the user to select one or more files. Only works on Linux. No dependencies. Supports zenity (GNOME), kdialog (KDE), yad (Yet Another Dialog), qarma (Qt-based), matedialog (MATE), rofi (window switcher wi")
 
 ## About
 

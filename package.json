@@ -1,7 +1,7 @@
 {
   "name": "open-windows-file-dialog",
   "description": "Programmatically open a file dialog window (explorer) for picking files. Only works on Windows. Also see: open-finder-dialog, open-linux-file-dialog, and open-file-manager-dialog for other platforms.",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "license": "MIT",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "homepage": "https://github.com/jonschlinkert/open-windows-file-dialog",
@@ -34,30 +34,37 @@
     "typescript": "^5.5.3"
   },
   "keywords": [
+    "desktop",
     "dialog",
+    "electron",
     "explorer",
+    "file chooser",
+    "file dialog",
     "file manager",
+    "file picker",
+    "file selection dialog",
+    "file selection",
     "file system",
-    "files",
-    "finder",
-    "open",
-    "prompt",
-    "terminal",
-    "windows",
+    "file-browser",
+    "file-chooser",
     "file-dialog",
-    "open-file",
     "file-picker",
     "file-selector",
-    "powershell",
-    "windows-forms",
-    "file-browser",
-    "native-dialog",
-    "file-chooser",
-    "windows-api",
     "file-system",
-    "desktop",
+    "files",
+    "finder",
     "gui",
-    "electron"
+    "linux",
+    "native-dialog",
+    "open-file",
+    "open",
+    "powershell",
+    "prompt",
+    "select",
+    "terminal",
+    "windows-api",
+    "windows-forms",
+    "windows"
   ],
   "verb": {
     "toc": false,
@@ -70,6 +77,12 @@
     ],
     "reflinks": [
       "verb"
+    ],
+    "related": [
+      "open-file-manager",
+      "open-file-manager-dialog",
+      "open-finder-dialog",
+      "open-linux-file-dialog"
     ],
     "lint": {
       "reflinks": true
