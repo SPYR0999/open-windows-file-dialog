@@ -1,0 +1,78 @@
+{
+  "name": "open-windows-file-dialog",
+  "description": "Programmatically open a file dialog window (explorer) for picking files. Only works on Windows. Also see: open-finder-dialog, open-linux-file-dialog, and open-file-manager-dialog for other platforms.",
+  "version": "0.0.2",
+  "license": "MIT",
+  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "homepage": "https://github.com/jonschlinkert/open-windows-file-dialog",
+  "repository": "jonschlinkert/open-windows-file-dialog",
+  "bugs": {
+    "url": "https://github.com/jonschlinkert/open-windows-file-dialog/issues"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist",
+    "eslint": "npx eslint --ext .ts .",
+    "test": "ts-mocha -r esbuild-register 'test/*.test.ts' --exit",
+    "tsup": "npm run clean && npx tsup"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "@typescript-eslint/eslint-plugin": "^8.7.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "esbuild-register": "^3.5.0",
+    "eslint": "^8.57.0",
+    "gulp-format-md": "^2.0.0",
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.5.3"
+  },
+  "keywords": [
+    "dialog",
+    "explorer",
+    "file manager",
+    "file system",
+    "files",
+    "finder",
+    "open",
+    "prompt",
+    "terminal",
+    "windows",
+    "file-dialog",
+    "open-file",
+    "file-picker",
+    "file-selector",
+    "powershell",
+    "windows-forms",
+    "file-browser",
+    "native-dialog",
+    "file-chooser",
+    "windows-api",
+    "file-system",
+    "desktop",
+    "gui",
+    "electron"
+  ],
+  "verb": {
+    "toc": false,
+    "layout": "default",
+    "tasks": [
+      "readme"
+    ],
+    "plugins": [
+      "gulp-format-md"
+    ],
+    "reflinks": [
+      "verb"
+    ],
+    "lint": {
+      "reflinks": true
+    }
+  }
+}
