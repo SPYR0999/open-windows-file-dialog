@@ -24,6 +24,15 @@ class FileDialogError extends Error {
   }
 }
 
+interface FolderDialogOptions {
+  title?: string;
+}
+
+interface FolderDialogResult {
+  folder: string | null;
+  canceled: boolean;
+}
+
 const isCanceled = (v: string): boolean => /cancell?ed/i.test(v);
 
 // Escape special characters for PowerShell
@@ -129,7 +138,14 @@ export const openWindowsFileDialog = async (
   return new Promise((resolve, reject) => {
     const child = cp.spawn(
       'powershell.exe',
-      ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-Command', '-'],
+      [
+        '-NoProfile',
+        '-NonInteractive',
+        '-ExecutionPolicy', 'Bypass',
+        '-WindowStyle', 'Hidden',
+        '-Command',
+        '-'
+      ],
       {
         windowsHide: true,
         shell: false
@@ -208,6 +224,145 @@ export const openWindowsFileDialog = async (
 export const openWindowsFileDialogSync = async (filepath?: string, options?: FileDialogOptions): Promise<string[]> => {
   const result = await openWindowsFileDialog(filepath, options);
   return result.files;
+};
+
+export const openWindowsFolderDialog = async (
+  filepath: string = process.cwd(),
+  options: FolderDialogOptions = {}
+): Promise<FolderDialogResult> => {
+  if (typeof filepath !== 'string') {
+    throw new FileDialogError('Filepath must be a string');
+  }
+
+  const normalizedPath = path.resolve(filepath);
+  const isPowerShellAvailable = await checkPowerShellAvailable();
+  if (!isPowerShellAvailable) {
+    throw new FileDialogError('PowerShell is not available on this system');
+  }
+
+  const opts: Required<FolderDialogOptions> = {
+    title: 'Select Folder',
+    maxTimeout: 5 * 60 * 1000, // 5 minutes
+    ...options
+  };
+
+  const escapedPath = escapeForPowerShell(normalizedPath);
+  const escapedTitle = escapeForPowerShell(opts.title);
+
+  const powershellScript = `
+    Add-Type -AssemblyName System.Windows.Forms
+    $dialog = New-Object System.Windows.Forms.OpenFileDialog
+    $dialog.InitialDirectory = "${escapedPath}"
+    $dialog.ValidateNames = $false
+    $dialog.CheckFileExists = $false
+    $dialog.CheckPathExists = $true
+    $dialog.FileName = "${escapedTitle}"
+
+    if ($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+        $selectedFolder = Split-Path -Path $dialog.FileName -Parent
+        Write-Output $selectedFolder
+    }
+  `;
+
+  return new Promise((resolve, reject) => {
+    const child = cp.spawn(
+      'powershell.exe',
+      [
+        '-NoProfile',
+        '-NonInteractive',
+        '-ExecutionPolicy', 'Bypass',
+        '-WindowStyle', 'Hidden',
+        '-Command',
+        '-'
+      ],
+      {
+        windowsHide: true,
+        shell: false
+      }
+    );
+
+    let stdoutData = '';
+    let stderrData = '';
+    let hasResolved = false;
+
+    child.stdout.on('data', data => {
+      stdoutData += data.toString();
+    });
+
+    child.stderr.on('data', data => {
+      stderrData += data.toString();
+    });
+
+    child.on('error', error => {
+      if (!hasResolved) {
+        hasResolved = true;
+        reject(new FileDialogError(`Failed to spawn PowerShell: ${error.message}`));
+      }
+    });
+
+    child.on('close', code => {
+      if (hasResolved) return;
+      hasResolved = true;
+
+      if (code !== 0 && stderrData) {
+        const errorMessage = stderrData.trim();
+        reject(new FileDialogError(`PowerShell error: ${errorMessage}`));
+        return;
+      }
+
+      const output = stdoutData.trim();
+
+      if (isCanceled(output)) {
+        resolve({ files: [], canceled: true });
+        return;
+      }
+
+      const folder = stdoutData.trim();
+
+      if (!folder) {
+        resolve({
+          folder: null,
+          canceled: true
+        });
+        return;
+      }
+
+      if (!path.isAbsolute(folder)) {
+        reject(new FileDialogError(
+          `Invalid folder path returned: ${folder}`
+        ));
+        return;
+      }
+
+      resolve({
+        folder,
+        canceled: false
+      });
+    });
+
+    if (opts.maxTimeout) {
+      // If maxTimeout is set, set timeout to kill the process if it takes too long
+      const timeout = setTimeout(() => {
+        if (!hasResolved) {
+          hasResolved = true;
+          child.kill();
+          reject(new FileDialogError('Dialog timeout after 5 minutes'));
+        }
+      }, opts.maxTimeout);
+
+      child.on('exit', () => {
+        clearTimeout(timeout);
+      });
+    }
+
+    child.stdin.write(powershellScript);
+    child.stdin.end();
+  });
+};
+
+export const openWindowsFolderDialogSync = async (filepath?: string, options?: FolderDialogOptions): Promise<string | null> => {
+  const result = await openWindowsFolderDialog(filepath, options);
+  return result.folder;
 };
 
 export default openWindowsFileDialog;
