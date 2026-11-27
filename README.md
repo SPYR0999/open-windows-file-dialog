@@ -1,28 +1,28 @@
 # open-windows-file-dialog [![NPM version](https://img.shields.io/npm/v/open-windows-file-dialog.svg?style=flat)](https://www.npmjs.com/package/open-windows-file-dialog) [![NPM monthly downloads](https://img.shields.io/npm/dm/open-windows-file-dialog.svg?style=flat)](https://npmjs.org/package/open-windows-file-dialog) [![NPM total downloads](https://img.shields.io/npm/dt/open-windows-file-dialog.svg?style=flat)](https://npmjs.org/package/open-windows-file-dialog)
 
-> Programmatically open a file dialog window (explorer) for picking files. Only works on Windows. Also see: open-finder-dialog, open-linux-file-dialog, and open-file-manager-dialog for other platforms.
+> Programmatically open a file dialog window (explorer) for picking files. Only works on Windows. Also see: open-finder-dialog, open-linux-file-dialog, and open-file-manager-dialog for other platforms. This fork adds a simple folder picker as well.
 
-Please consider following this project's author, [Jon Schlinkert](https://github.com/jonschlinkert), and consider starring the project to show your :heart: and support.
+Please consider following this project's original author, [Jon Schlinkert](https://github.com/jonschlinkert).
 
 ## Install
 
 Install with [npm](https://www.npmjs.com/):
 
 ```sh
-$ npm install --save open-windows-file-dialog
+$ npm install github:SPYR0999/open-windows-file-dialog
 ```
 
 ## Usage
 
 ```typescript
-import { openWindowsFileDialog } from 'open-windows-file-dialog';
+import { openWindowsFileDialog, openWindowsFolderDialog } from 'open-windows-file-dialog';
 // or
-import openWindowsFileDialog from 'open-windows-file-dialog';
+import openWindowsFileDialog from 'open-windows-file-dialog'; // Only file picker is available as default export
 ```
 
 ## API
 
-### Main Function
+### Main Functions
 
 **openWindowsFileDialog**
 
@@ -35,7 +35,16 @@ export const openWindowsFileDialog = async (
 
 Opens a Windows file dialog to select files and returns detailed results including selected files and cancellation status.
 
-### Convenience Function
+```typescript
+export const openWindowsFolderDialog = async (
+  filepath?: string,
+  options?: FolderDialogOptions
+): Promise<FolderDialogResult>;
+```
+
+Opens a Windows file dialog that allows selecting folders.
+
+### Convenience Functions
 
 **openWindowsFileDialogSync**
 
@@ -47,6 +56,15 @@ export const openWindowsFileDialogSync = async (
 ```
 
 Returns only the array of selected file paths for simpler usage.
+
+```typescript
+export const openWindowsFolderDialogSync = async (
+  filepath?: string,
+  options?: FileDialogOptions
+): Promise<string[]>;
+```
+
+Returns only the array of selected folder path for simpler usage.
 
 ## Types
 
@@ -61,6 +79,15 @@ interface FileDialogOptions {
 
 interface FileDialogResult {
   files: string[]; // Array of selected file paths
+  canceled: boolean; // Whether the dialog was canceled
+}
+
+interface FolderDialogOptions {
+  title?: string; // Dialog title (default: 'Select Folder')
+}
+
+interface FolderDialogResult {
+  files: string || null; // Selected folder path
   canceled: boolean; // Whether the dialog was canceled
 }
 ```
@@ -78,6 +105,11 @@ console.log('Was canceled:', result.canceled);
 // Simple version that returns only file paths
 const files = await openWindowsFileDialogSync();
 console.log('Selected files:', files);
+
+// Open folder dialog in current directory
+const result = await openWindowsFolderDialog();
+console.log('Selected folder:', result.folder);
+console.log('Was canceled:', result.canceled);
 ```
 
 ### Custom Directory
@@ -212,14 +244,6 @@ try {
 }
 ```
 
-## Related
-
-You might also be interested in:
-
-* [open-file-manager](https://www.npmjs.com/package/open-file-manager): Cross-platform utility to open a file or directory in the system's default file manager (Finder… [more](https://github.com/jonschlinkert/open-file-manager) | [homepage](https://github.com/jonschlinkert/open-file-manager "Cross-platform utility to open a file or directory in the system's default file manager (Finder, Explorer, Nautilus, etc.)")
-* [open-finder-dialog](https://www.npmjs.com/package/open-finder-dialog): Open a finder dialog window (finder prompt) programmatically. Only works on MacOS. | [homepage](https://github.com/jonschlinkert/open-finder-dialog "Open a finder dialog window (finder prompt) programmatically. Only works on MacOS.")
-* [open-linux-file-dialog](https://www.npmjs.com/package/open-linux-file-dialog): Open a file dialog window programmatically to allow the user to select one or more… [more](https://github.com/jonschlinkert/open-linux-file-dialog) | [homepage](https://github.com/jonschlinkert/open-linux-file-dialog "Open a file dialog window programmatically to allow the user to select one or more files. Only works on Linux. No dependencies. Supports zenity (GNOME), kdialog (KDE), yad (Yet Another Dialog), qarma (Qt-based), matedialog (MATE), rofi (window switcher wi")
-
 ## About
 
 <details>
@@ -240,19 +264,6 @@ $ npm install && npm test
 
 </details>
 
-<details>
-<summary><strong>Building docs</strong></summary>
-
-_(This project's readme.md is generated by [verb](https://github.com/verbose/verb-generate-readme), please don't edit the readme directly. Any changes to the readme must be made in the [.verb.md](.verb.md) readme template.)_
-
-To generate the readme, run the following command:
-
-```sh
-$ npm install -g verbose/verb#dev verb-generate-readme && verb
-```
-
-</details>
-
 ### Author
 
 **Jon Schlinkert**
@@ -265,7 +276,3 @@ $ npm install -g verbose/verb#dev verb-generate-readme && verb
 
 Copyright © 2025, [Jon Schlinkert](https://github.com/jonschlinkert).
 Released under the [MIT License](LICENSE).
-
-***
-
-_This file was generated by [verb-generate-readme](https://github.com/verbose/verb-generate-readme), v0.8.0, on May 25, 2025._
